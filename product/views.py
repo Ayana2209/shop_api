@@ -2,7 +2,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from product.models import Category, Product, Review
-from product.serializers import CategorySerializer, ProductSerializer, ReviewSerializer
+from product.serializers import CategorySerializer, ProductSerializer, ReviewSerializer, \
+ProductSerializerReview
 
 
 @api_view(["GET"])
@@ -56,4 +57,11 @@ def review_detail_api_view(request, review_id):
         return Response(data={'error': "Review NOT FOUND"},
                         status=status.HTTP_404_NOT_FOUND)
     serializer = ReviewSerializer(review)
+    return Response(data=serializer.data)
+
+
+@api_view(['GET'])
+def product_review_list(request):
+    product_review = Product.objects.all()
+    serializer = ProductSerializerReview(product_review, many=True)
     return Response(data=serializer.data)
